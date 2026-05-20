@@ -3,132 +3,126 @@
 @section('title', 'Jadwal Konsultasi - Bumiloo')
 
 @section('content')
-<div class="w-full min-h-screen bg-[#F0F2F5] p-4 md:p-8 font-['Poppins',sans-serif] text-[#1E3A5F]">
+<style>
+    .jwl-container * { font-family: 'Poppins', sans-serif !important; box-sizing: border-box !important; }
+    /* Mengosongkan max-width agar box form melebar penuh mengikuti layar figma kanan */
+    .jwl-form-box { background: #F4F5F7 !important; border-radius: 16px !important; border: 1px solid #D2D6DC !important; padding: 25px 30px !important; width: 100% !important; }
+    .jwl-label { font-size: 14px !important; font-weight: 500 !important; color: #000000 !important; }
+    .jwl-input { background: #FFFFFF !important; border: 1px solid #A0AEC0 !important; border-radius: 8px !important; padding: 10px 15px !important; font-size: 14px !important; outline: none !important; }
+    .jwl-input:focus { border-color: #F875AA !important; box-shadow: 0 0 0 2px rgba(248, 117, 170, 0.2) !important; }
     
-    <div class="mb-6">
-        <h1 class="text-2xl md:text-3xl font-bold text-[#1E3A5F]">Jadwal Konsultasi</h1>
+    /* Tombol Simpan Pink Khas Bumiloo */
+    .jwl-btn-submit { background-color: #F875AA !important; color: white !important; font-weight: bold !important; border-radius: 10px !important; padding: 12px 28px !important; border: none !important; cursor: pointer !important; font-size: 14px !important; display: flex !important; align-items: center !important; gap: 10px !important; transition: 0.2s !important; box-shadow: 0 4px 6px rgba(248, 117, 170, 0.2) !important; }
+    .jwl-btn-submit:hover { background-color: #f55a9a !important; }
+    
+    /* Tabel Berdiri Lebar Penuh Tanpa Batasan Batas Kaku */
+    .jwl-table-box { width: 100% !important; border-collapse: collapse !important; border-radius: 12px !important; overflow: hidden !important; }
+    .jwl-table-box th { background-color: #F875AA !important; color: white !important; padding: 14px 15px !important; font-weight: 600 !important; font-size: 14px !important; border: none !important; text-align: left !important; }
+    .jwl-table-box td { padding: 14px 15px !important; font-size: 14px !important; border-bottom: 1px solid #E2E8F0 !important; background-color: #FFFFFF !important; color: #333333 !important; }
+    .jwl-table-box tr:nth-child(even) td { background-color: #FFF5F7 !important; } /* Zebra Pink Lembut */
+</style>
+
+<div class="jwl-container w-full" style="padding: 10px 20px; background-color: #FFFFFF; min-h-screen;">
+    
+    <h1 style="font-size: 28px; font-weight: 700; color: #000000; margin: 0 0 15px 0;">Jadwal Konsultasi</h1>
+
+    <div style="margin-bottom: 25px;">
+        @if(isset($pasien) && $pasien)
+            <p style="font-size: 15px; font-weight: 600; color: #000000; margin: 0; letter-spacing: -0.3px;">
+                Pasien: {{ $pasien->name }} — NIK: {{ $pasien->nik }} — No. HP: {{ $pasien->no_hp }} — Tgl Lahir: {{ date('d-m-Y', strtotime($pasien->tgl_lahir)) }}
+            </p>
+        @else
+            <p style="font-size: 14px; font-weight: 500; color: #718096; margin: 0; border-left: 4px solid #F875AA; padding-left: 12px; font-style: italic;">
+                Belum ada data pasien yang dipilih. Silakan hubungi aksi melalui halaman <span style="color: #F875AA; font-weight: 600;">Data Pasien</span> untuk memicu pembuatan jadwal.
+            </p>
+        @endif
     </div>
 
-    @if(isset($pasien) && $pasien)
-    <div class="mb-6 p-5 bg-white rounded-2xl border-l-[10px] border-[#F875AA] shadow-sm">
-        <p class="text-sm md:text-base font-medium text-gray-700">
-            Mendaftarkan Jadwal Untuk Pasien: <span class="font-bold text-black">{{ $pasien->name }}</span> 
-            <span class="mx-2 text-gray-300">|</span> NIK: <span class="font-bold text-black">{{ $pasien->nik }}</span> 
-            <span class="mx-2 text-gray-300">|</span> No. HP: <span class="font-bold text-black">{{ $pasien->no_hp }}</span>
+    <div class="jwl-form-box" style="margin-bottom: 35px;">
+        <p style="font-size: 15px; font-weight: 700; color: #000000; margin: 0 0 25px 0;">
+            {{ isset($editJadwal) ? 'Edit Jadwal Konsultasi' : 'Tambah Jadwal Konsultasi' }}
         </p>
-    </div>
-    @endif
 
-    <div class="bg-[#F8FAFC] rounded-[24px] shadow-sm border border-gray-100 mb-8 overflow-hidden w-full">
-        <div class="px-6 py-4 bg-gray-50 border-b border-gray-100 flex items-center">
-            <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                {{ isset($editJadwal) ? 'TAMBAH JADWAL KONSULTASI (EDIT MODE)' : 'TAMBAH JADWAL KONSULTASI' }}
-            </span>
-        </div>
-        
-        <form action="{{ isset($editJadwal) ? route('jadwal.update', $editJadwal->id) : route('jadwal.store') }}" method="POST" class="p-6 md:p-8">
+        <form action="{{ isset($editJadwal) ? route('jadwal.update', $editJadwal->id) : route('jadwal.store') }}" method="POST" style="margin: 0; display: flex; flex-direction: column; width: 100%;">
             @csrf
-            @if(isset($editJadwal)) 
-                @method('PUT') 
-            @endif
+            @if(isset($editJadwal)) @method('PUT') @endif
 
-            <input type="hidden" name="nama_pasien" value="{{ $editJadwal->nama_pasien ?? ($pasien->name ?? 'Umum') }}">
-            <input type="hidden" name="nik" value="{{ $editJadwal->nik ?? ($pasien->nik ?? '-') }}">
-            <input type="hidden" name="no_hp" value="{{ $editJadwal->no_hp ?? ($pasien->no_hp ?? '-') }}">
-            <input type="hidden" name="tgl_lahir" value="{{ $editJadwal->tgl_lahir ?? ($pasien->tgl_lahir ?? '-') }}">
+            <input type="hidden" name="nama_pasien" value="{{ $editJadwal->nama_pasien ?? ($pasien->name ?? '') }}">
+            <input type="hidden" name="nik" value="{{ $editJadwal->nik ?? ($pasien->nik ?? '') }}">
+            <input type="hidden" name="no_hp" value="{{ $editJadwal->no_hp ?? ($pasien->no_hp ?? '') }}">
+            <input type="hidden" name="tgl_lahir" value="{{ $editJadwal->tgl_lahir ?? ($pasien->tgl_lahir ?? '') }}">
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="flex flex-col">
-                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Tanggal Pemeriksaan</label>
-                    <input type="date" name="tgl_pemeriksaan" value="{{ $editJadwal->tgl_pemeriksaan ?? '' }}" required
-                        class="w-full p-3 bg-white border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-pink-300 focus:border-transparent outline-none font-medium text-[#1E3A5F]">
+            <div style="display: flex; gap: 40px; width: 100%; margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
+                    <label class="jwl-label" style="width: 160px; shrink: 0;">Tanggal Pemeriksaan</label>
+                    <input type="date" name="tgl_pemeriksaan" value="{{ $editJadwal->tgl_pemeriksaan ?? '' }}" required class="jwl-input" style="flex-grow: 1; max-width: 260px; height: 42px;">
                 </div>
-                
-                <div class="flex flex-col">
-                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Jam</label>
-                    <input type="time" name="jam" value="{{ $editJadwal->jam ?? '' }}" required
-                        class="w-full p-3 bg-white border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-pink-300 focus:border-transparent outline-none font-medium text-[#1E3A5F]">
-                </div>
-
-                <div class="md:col-span-2 flex flex-col">
-                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Keterangan</label>
-                    <textarea name="keterangan" rows="3" placeholder="Masukkan detail konsultasi..."
-                        class="w-full p-4 bg-white border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-pink-300 focus:border-transparent outline-none font-medium resize-none text-[#1E3A5F]">{{ $editJadwal->keterangan ?? '' }}</textarea>
+                <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
+                    <label class="jwl-label" style="width: 50px; shrink: 0;">Jam</label>
+                    <input type="time" name="jam" value="{{ $editJadwal->jam ?? '' }}" required class="jwl-input" style="flex-grow: 1; max-width: 180px; height: 42px;">
                 </div>
             </div>
 
-            <div class="mt-6 flex justify-end gap-3">
+            <div style="display: flex; align-items: flex-start; gap: 15px; width: 100%; margin-bottom: 25px;">
+                <label class="jwl-label" style="width: 160px; shrink: 0; padding-top: 8px;">Keterangan</label>
+                <textarea name="keterangan" placeholder="Masukkan detail konsultasi..." required class="jwl-input" style="width: 100%; flex-grow: 1; height: 110px; resize: none; font-family: inherit;"></textarea>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; width: 100%;">
                 @if(isset($editJadwal))
-                    <a href="{{ route('jadwal.index') }}" class="bg-gray-400 hover:bg-gray-500 text-white px-5 py-2 rounded-xl font-bold transition text-sm flex items-center">Batal</a>
+                    <a href="{{ route('jadwal.index') }}" style="text-decoration: none; background: #A0AEC0; color: white; padding: 10px 24px; border-radius: 10px; font-weight: bold; font-size: 14px; margin-right: 12px; display: flex; align-items: center;">Batal</a>
                 @endif
-                <button type="submit" 
-                    class="bg-[#F875AA] hover:bg-[#f55a9a] text-white px-6 py-2 rounded-xl font-bold transition-all shadow-sm flex items-center gap-2 transform active:scale-95">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                <button type="submit" class="jwl-btn-submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" style="width: 18px; height: 18px; fill: #FFFFFF;" viewBox="0 0 24 24">
+                        <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
                     </svg>
-                    <span class="text-sm">{{ isset($editJadwal) ? 'Update' : 'Simpan' }}</span>
+                    Simpan
                 </button>
             </div>
         </form>
     </div>
 
-    <div class="mb-4">
-        <h2 class="text-xl font-bold text-[#1E3A5F]">Daftar Jadwal Konsultasi</h2>
-    </div>
-    
-    <div class="bg-white rounded-[20px] shadow-sm border border-gray-100 overflow-hidden w-full">
-        <div class="overflow-x-auto w-full">
-            <table class="w-full text-left border-collapse whitespace-nowrap">
-                <thead class="bg-[#F875AA] text-white">
-                    <tr class="text-sm">
-                        <th class="p-4 font-bold">Nama Pasien</th>
-                        <th class="p-4 font-bold">NIK</th>
-                        <th class="p-4 font-bold">No. HP</th>
-                        <th class="p-4 font-bold">Tgl Lahir</th>
-                        <th class="p-4 font-bold">Tgl Pemeriksaan</th>
-                        <th class="p-4 font-bold">Jam</th>
-                        <th class="p-4 font-bold">Keterangan</th>
-                        <th class="p-4 font-bold text-center">Aksi</th>
+    <div style="margin-top: 30px; width: 100%;">
+        <h2 style="font-size: 20px; font-weight: 700; color: #000000; margin: 0 0 15px 0;">Daftar Jadwal Konsultasi</h2>
+        
+        <div style="overflow-x: auto; width: 100%;">
+            <table class="jwl-table-box">
+                <thead>
+                    <tr>
+                        <th style="border-top-left-radius: 12px;">Nama Pasien</th>
+                        <th>NIK</th>
+                        <th>No. HP</th>
+                        <th>Tgl Lahir</th>
+                        <th>Tgl Pemeriksaan</th>
+                        <th>Jam</th>
+                        <th style="border-top-right-radius: 12px; text-align: center;">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="text-gray-700 text-xs md:text-sm">
+                <tbody>
                     @forelse($jadwals as $j)
-                    <tr class="border-b border-gray-100 hover:bg-pink-50/20 transition-colors">
-                        <td class="p-4 font-semibold text-gray-950">{{ $j->nama_pasien }}</td>
-                        <td class="p-4 text-gray-600">{{ $j->nik }}</td>
-                        <td class="p-4 text-gray-600">{{ $j->no_hp }}</td>
-                        <td class="p-4 text-gray-600">{{ $j->tgl_lahir }}</td>
-                        <td class="p-4 font-bold text-gray-950">{{ date('d/m/Y', strtotime($j->tgl_pemeriksaan)) }}</td>
-                        <td class="p-4 font-bold text-gray-950">{{ $j->jam }}</td>
-                        <td class="p-4 italic text-gray-500 max-w-[180px] truncate" title="{{ $j->keterangan }}">{{ $j->keterangan }}</td>
-                        <td class="p-4">
-                            <div class="flex justify-center gap-2">
-                                <a href="{{ route('jadwal.index', ['edit_id' => $j->id]) }}" 
-                                   class="w-8 h-8 flex items-center justify-center bg-[#D9D9D9] rounded-lg hover:bg-gray-300 transition shadow-sm" 
-                                   title="Edit">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#FFD700]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                    </svg>
-                                </a>
-
-                                <button type="button" onclick="confirmDelete('{{ $j->id }}', '{{ $j->nama_pasien }}')" 
-                                        class="w-8 h-8 flex items-center justify-center bg-[#D9D9D9] rounded-lg hover:bg-gray-300 transition shadow-sm" 
-                                        title="Hapus">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#FF0000]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                    </svg>
-                                </button>
-
-                                <form id="delete-form-{{ $j->id }}" action="{{ route('jadwal.destroy', $j->id) }}" method="POST" class="hidden">
-                                    @csrf 
-                                    @method('DELETE')
+                    <tr>
+                        <td style="font-weight: 500;">{{ $j->nama_pasien }}</td>
+                        <td>{{ $j->nik }}</td>
+                        <td>{{ $j->no_hp }}</td>
+                        <td>{{ date('d-m-Y', strtotime($j->tgl_lahir)) }}</td>
+                        <td style="font-weight: 600;">{{ date('d/m/Y', strtotime($j->tgl_pemeriksaan)) }}</td>
+                        <td style="font-weight: 600;">{{ $j->jam }}</td>
+                        <td style="text-align: center;">
+                            <div style="display: flex; justify-content: center; gap: 8px;">
+                                <a href="{{ route('jadwal.index', ['edit_id' => $j->id]) }}" style="text-decoration: none; color: #D69E2E; font-weight: bold; font-size: 13px; background: #EDF2F7; padding: 5px 12px; border-radius: 6px;">Edit</a>
+                                <button type="button" onclick="confirmDelete('{{ $j->id }}', '{{ $j->nama_pasien }}')" style="color: #E53E3E; font-weight: bold; font-size: 13px; background: #EDF2F7; padding: 5px 12px; border-radius: 6px; border: none; cursor: pointer;">Hapus</button>
+                                
+                                <form id="delete-form-{{ $j->id }}" action="{{ route('jadwal.destroy', $j->id) }}" method="POST" style="display: none;">
+                                    @csrf @method('DELETE')
                                 </form>
                             </div>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="8" class="p-8 text-center text-gray-400 italic">Belum ada jadwal konsultasi yang terdaftar.</td>
+                        <td colspan="7" style="text-align: center; color: #A0AEC0; padding: 40px; font-style: italic; font-weight: 500;">
+                            Belum ada jadwal konsultasi yang terdaftar di dalam database.
+                        </td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -137,30 +131,22 @@
     </div>
 </div>
 
-{{-- SweetAlert2 JS --}}
+{{-- SweetAlert2 System JS --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function confirmDelete(id, nama) {
         Swal.fire({
-            title: 'Hapus Data Pasien?',
-            text: "Apakah Anda yakin ingin menghapus jadwal pasien " + nama + "? Tindakan ini tidak dapat dibatalkan",
+            title: 'Hapus Antrean?',
+            text: "Yakin ingin menghapus jadwal dari " + nama + "?",
             icon: 'warning',
-            iconColor: '#d33',
             showCancelButton: true,
             confirmButtonColor: '#ff0000',
             cancelButtonColor: '#d1d5db',
             confirmButtonText: 'Hapus',
             cancelButtonText: 'Batal',
-            customClass: {
-                popup: 'rounded-[24px]',
-                title: 'font-bold text-[#1E3A5F]',
-                confirmButton: 'rounded-xl px-6 py-2 font-bold text-sm',
-                cancelButton: 'rounded-xl px-6 py-2 font-bold text-sm text-gray-600'
-            }
+            customClass: { popup: 'rounded-[24px]' }
         }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('delete-form-' + id).submit();
-            }
+            if (result.isConfirmed) { document.getElementById('delete-form-' + id).submit(); }
         })
     }
 </script>
@@ -169,17 +155,8 @@
 <script>
     Swal.fire({
         text: "{{ session('success') }}",
-        showConfirmButton: false, 
-        timer: 3000, 
-        toast: true,
-        position: 'top', 
-        width: '400px',
-        background: '#C6E7CE',
-        color: '#000000', 
-        showCloseButton: true, 
-        customClass: {
-            popup: 'rounded-xl shadow-md border border-green-200',
-        }
+        showConfirmButton: false, timer: 3000, toast: true, position: 'top', width: '400px',
+        background: '#C6E7CE', color: '#000000', customClass: { popup: 'rounded-xl' }
     });
 </script>
 @endif

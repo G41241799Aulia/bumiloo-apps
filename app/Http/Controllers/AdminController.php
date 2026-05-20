@@ -28,12 +28,13 @@ class AdminController extends Controller
      * Menampilkan Data Pasien
      */
     public function dataPasien()
-    {
-        $pasiens = User::where('role', 'Ibu Hamil')->latest()->get(); 
-        $totalPasien = $pasiens->count();
-
-        return view('master.pasien', compact('pasiens', 'totalPasien'));
-    }
+{
+    // Mengambil user dengan role 'Ibu Hamil' sesuai log database kamu
+    $pasiens = \App\Models\User::where('role', 'Ibu Hamil')->orderBy('created_at', 'desc')->get();
+    
+    // Arahkan ke folder resources/views/admin/pasien/index.blade.php
+    return view('admin.pasien.index', compact('pasiens')); 
+}
 
     /**
      * Menampilkan Data Bidan untuk Admin
