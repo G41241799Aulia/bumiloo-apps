@@ -39,8 +39,10 @@
             </div>
         </div>
         <div class="mb-3">
+        <div class="col-md-4">    
             <label class="form-label">Estimasi Persalinan</label>
             <input type="date" class="form-control">
+        </div>
         </div>
 
 
@@ -73,10 +75,6 @@
                 <label class="form-label">Denyut Jantung Janin (x/menit)</label>
                 <input type="number" class="form-control">
             </div>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Urin</label>
-            <input type="text" class="form-control">
         </div>
 
 

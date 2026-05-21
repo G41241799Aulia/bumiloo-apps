@@ -7,6 +7,7 @@ use App\Http\Controllers\BidanController;
 use App\Http\Controllers\BumilController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\InputPasienController;
 
 // 1. Rute Home / Landing Page
 Route::get('/', function () {
@@ -33,45 +34,106 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     // ==========================================
-    // --- GRUP ROUTE ADMIN (Disatukan di sini) ---
-    // ==========================================
-    Route::prefix('admin')->group(function () {
-        // Halaman Utama Admin
-        Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+// --- GRUP ROUTE ADMIN (Disatukan di sini) ---
+// ==========================================
+Route::prefix('admin')->group(function () {
+    
+    // Halaman Utama Admin -> URL: /admin/dashboard
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 
-        // Master Data Admin
-        Route::prefix('master')->group(function () {
-            Route::get('/pasien', [AdminController::class, 'dataPasien'])->name('master.pasien');
-            Route::get('/bidan', [AdminController::class, 'dataBidan'])->name('master.bidan');
-            Route::get('/hak-akses', [AdminController::class, 'hakAkses'])->name('master.hakakses');
-            Route::get('/hak-akses/create', [AdminController::class, 'createHakAkses'])->name('hakakses.create');
-            Route::get('/hak-akses/{id}/view', [AdminController::class, 'viewHakAkses'])->name('hakakses.view');
-            Route::get('/hak-akses/{id}/edit', [AdminController::class, 'editHakAkses'])->name('hakakses.edit');
-        });
+    // Master Data Admin
+    Route::prefix('master')->group(function () {
+        
+        // --- FITUR PASIEN ---
+        // URL: /admin/master/pasien
+        Route::get('/pasien', [AdminController::class, 'dataPasien'])->name('master.pasien');
+        // URL: /admin/master/pasien/{id}/edit
+        Route::get('/pasien/{id}/edit', function ($id) {
+            return "Halaman Edit Pasien ID: " . $id . " (Demo Mode)";
+        })->name('pasien.edit');
+        // URL: /admin/master/pasien/{id}/destroy
+        Route::delete('/pasien/{id}/destroy', function ($id) {
+            return redirect()->back()->with('success', 'Data pasien berhasil dihapus! (Demo Mode)');
+        })->name('pasien.destroy');
+        
+        // --- FITUR BIDAN ---
+        // URL: /admin/master/bidan
+        Route::get('/bidan', [AdminController::class, 'dataBidan'])->name('master.dataBidan');
+        // URL: /admin/master/bidan-alias (Penyelamat Sidebar Baris 51)
+        Route::get('/bidan-alias', [AdminController::class, 'dataBidan'])->name('master.bidan');
+        // URL: /admin/master/bidan/{id}/update
+        Route::put('/bidan/{id}/update', function ($id) {
+            return redirect()->back()->with('success', 'Data bidan berhasil diperbarui! (Demo Mode)');
+        })->name('bidan.update');
 
-        // Fitur Jadwal Kegiatan Admin
-        Route::get('/jadwal', [AdminController::class, 'jadwalIndex'])->name('jadwal.index');
-        Route::post('/jadwal', [AdminController::class, 'jadwalStore'])->name('jadwal.store');
-        Route::put('/jadwal/{id}', [AdminController::class, 'jadwalUpdate'])->name('jadwal.update');
-        Route::delete('/jadwal/{id}', [AdminController::class, 'jadwalDestroy'])->name('jadwal.destroy');
-
-        // Fitur Edukasi & Laporan Admin
-        Route::get('/edukasi', function () {
-            return view('admin.edukasi'); 
-        })->name('admin.edukasi');
-
-        Route::get('/laporan', function () {
-            return view('admin.laporan'); 
-        })->name('admin.laporan');
+        // --- FITUR HAK AKSES ---
+        // URL: /admin/master/hak-akses
+        Route::get('/hak-akses', [AdminController::class, 'hakAkses'])->name('master.hakakses');
+        // URL: /admin/master/hak-akses/create
+        Route::get('/hak-akses/create', [AdminController::class, 'createHakAkses'])->name('hakakses.create');
+        // URL: /admin/master/hak-akses/{id}/view
+        Route::get('/hak-akses/{id}/view', [AdminController::class, 'viewHakAkses'])->name('hakakses.view');
+        // URL: /admin/master/hak-akses/{id}/edit
+        Route::get('/hak-akses/{id}/edit', [AdminController::class, 'editHakAkses'])->name('hakakses.edit');
     });
 
-    // ==========================================
-    // --- GRUP ROUTE BIDAN ---
+    // Fitur Jadwal Kegiatan Admin -> URL: /admin/jadwal
+    Route::get('/jadwal', [AdminController::class, 'jadwalIndex'])->name('jadwal.index');
+    Route::post('/jadwal', [AdminController::class, 'jadwalStore'])->name('jadwal.store');
+    Route::put('/jadwal/{id}', [AdminController::class, 'jadwalUpdate'])->name('jadwal.update');
+    Route::delete('/jadwal/{id}', [AdminController::class, 'jadwalDestroy'])->name('jadwal.destroy');
+
+    // Fitur Edukasi & Laporan Admin -> URL: /admin/edukasi & /admin/laporan
+    Route::get('/edukasi', function () {
+        return view('admin.edukasi'); 
+    })->name('admin.edukasi');
+
+    Route::get('/laporan', function () {
+        return view('admin.laporan'); 
+    })->name('admin.laporan');
+});
+// ==========================================
+    // --- GRUP ROUTE BIDAN---
     // ==========================================
     Route::prefix('bidan')->group(function () {
+        
+        // Halaman Utama Dashboard Bidan
         Route::get('/dashboard', [BidanController::class, 'index'])->name('bidan.dashboard');
-        // Tambahkan rute internal bidan lainnya di bawah sini nanti
-    });
+        
+        // Membuka Halaman Form Input & Tabel Daftar Pasien (Memanggil Controller Baru)
+        Route::get('/input-daftar-pasien', [InputPasienController::class, 'indexPasien'])->name('bidan.inputDaftarPasien');
+        
+        // Route untuk PROSES SIMPAN (Method harus POST)
+        // PERBAIKAN: Menghapus 'bidan/' di URL agar tidak terjadi double prefix /bidan/bidan/
+        Route::post('pasien/store', [InputPasienController::class, 'storePasien'])->name('bidan.pasien.store');
+        
+        // Mengambil data spesifik pasien saat baris tabel di-klik (untuk Javascript Fetch)
+        Route::get('/pasien/{id}', [InputPasienController::class, 'showPasien'])->name('pasien.show');
+        
+        // Form Input Perkembangan Medis Pasien
+        Route::get('/input-perkembangan-pasien', function () {
+            return view('bidan.inputPerkembanganPasien');
+        })->name('bidan.inputPerkembanganPasien');
+     
+        Route::post('/input-perkembangan', function () {
+            return redirect()->back()->with('success', 'Data perkembangan berhasil disimpan! (Demo Mode)');
+        })->name('bidan.inputPerkembangan');
+
+        // Halaman Jadwal Praktik Bidan
+        Route::get('/jadwal', function () { return view('bidan.jadwal'); })->name('bidan.jadwal');
+
+        // Halaman Utama Konsultasi
+        Route::get('/konsultasi', function () {
+            return view('bidan.konsultasi', ['konsultasis' => collect([])]);
+        })->name('bidan.konsultasi');
+
+        // Halaman Laporan / Rekam Medis
+        Route::get('/laporan', function () { return view('bidan.laporan'); })->name('bidan.laporan');
+        Route::get('/laporan-bidan-demo', function () { return view('bidan.laporan'); })->name('bidan.laporanBidan');
+
+        // Halaman Room Chat Pasien
+        Route::get('/roomchat', function () { return view('bidan.roomchat'); })->name('bidan.roomchat');
+    }); // <--- Mengunci Grup Bidan dengan aman
 
     // ==========================================
     // --- GRUP ROUTE IBU HAMIL (BUMIL) ---

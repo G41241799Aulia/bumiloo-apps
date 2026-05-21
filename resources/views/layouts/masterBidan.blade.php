@@ -20,6 +20,7 @@
         .main-content { margin-left: 250px; padding: 30px; }
         .text-pink { color: #f687b3; }
         .logout-btn { background: none; border: none; color: white; width: 100%; text-align: left; }
+        .th-bumiloo th { background-color: #f875aa !important;color: white !important; }
     </style>
 </head>
 
@@ -35,10 +36,9 @@
         <ul class="nav flex-column">
             <li class="nav-item"><a class="nav-link {{ Request::is('bidan/dashboard') ? 'active' : '' }}" href="{{ route('bidan.dashboard') }}"><i class="fas fa-home"></i> Beranda</a></li>
             <li class="nav-item"><a class="nav-link {{ Request::is('bidan/konsultasi*') ? 'active' : '' }}" href="{{ route('bidan.konsultasi') }}"><i class="fas fa-comment"></i> Konsultasi</a></li>
-            <li class="nav-item"><a class="nav-link {{ Request::is('bidan/input-data') ? 'active' : '' }}" href="{{ route('bidan.input') }}"><i class="fas fa-user-plus"></i> Input Pasien</a></li>
-            <li class="nav-item"><a class="nav-link {{ Request::is('bidan/input-perkembangan') ? 'active' : '' }}" href="{{ route('bidan.inputPerkembangan') }}"><i class="fas fa-file-medical"></i> Perkembangan</a></li>
+            <li class="nav-item"><a class="nav-link {{ Request::is('bidan/input-data') ? 'active' : '' }}" href="{{ route('bidan.inputDaftarPasien') }}"><i class="fas fa-user-plus"></i> Input Pasien</a></li>
             <li class="nav-item"><a class="nav-link {{ Request::is('bidan/jadwal-kegiatan') ? 'active' : '' }}" href="{{ route('bidan.jadwal') }}"><i class="fas fa-calendar-alt"></i> Jadwal</a></li>
-            <li class="nav-item"><a class="nav-link {{ Request::is('bidan/laporan*') ? 'active' : '' }}" href="{{ route('bidan.laporanBidan') }}"><i class="fa fa-file-alt"></i> Laporan</a></li>
+            <li class="nav-item"><a class="nav-link {{ Request::is('bidan/laporan*') ? 'active' : '' }}" href="{{ route('bidan.laporan') }}"><i class="fa fa-file-alt"></i> Laporan</a></li>
             
             <hr class="mx-3">
             <li class="nav-item">

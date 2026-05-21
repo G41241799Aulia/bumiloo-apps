@@ -115,22 +115,22 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ route('pasien.konsultasi') }}" class="nav-link">
+            <a href="#" class="nav-link">
                 <i class="fas fa-comments"></i> <span>Konsultasi</span>
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ route('pasien.riwayat') }}" class="nav-link">
+            <a href="#" class="nav-link">
                 <i class="fas fa-chart-line"></i> <span>Perkembangan</span>
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ route('pasien.hpl') }}" class="nav-link">
+            <a href="#" class="nav-link">
                 <i class="fas fa-calendar-check"></i> <span>HPL</span>
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ route('pasien.reminder') }}" class="nav-link">
+            <a href="#" class="nav-link">
                 <i class="fas fa-bell"></i> <span>Reminder</span>
             </a>
         </li>

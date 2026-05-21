@@ -39,11 +39,21 @@ class AdminController extends Controller
     /**
      * Menampilkan Data Bidan untuk Admin
      */
-    public function dataBidan()
-    {
-        $bidans = User::where('role', 'Bidan')->latest()->get();
-        return view('master.bidan', compact('bidans'));
+   public function dataBidan()
+{
+    $b = \App\Models\User::where('role', 'Bidan')->orderBy('created_at', 'desc')->first();
+    if (!$b) {
+        $b = (object) [
+            'id' => 1,
+            'id_bidan' => 'B001',
+            'nama' => 'Siti Fatimah, Amd.Keb', 
+            'email' => 'bidan@demo.com',
+            'nip' => '-',
+            'sip' => '-'
+        ];
     }
+    return view('admin.master.dataBidan', compact('b'));
+}
 
     /**
      * Menampilkan Halaman Hak Akses
