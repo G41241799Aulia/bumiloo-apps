@@ -1,6 +1,17 @@
 @extends('layouts.masterBidan')
 
 @section('content')
+<style>
+    .psn-container * { font-family: 'Poppins', sans-serif !important; box-sizing: border-box !important; }
+    .psn-table-wrapper { width: 100% !important; overflow-x: auto !important; border: 1px solid #D2D6DC !important; border-radius: 12px !important; box-shadow: 0 4px 6px rgba(0,0,0,0.05) !important; margin-top: 20px; }
+    .psn-table-box { width: 100% !important; border-collapse: collapse !important; min-width: 1700px !important; } 
+    .psn-table-box th { background-color: #F875AA !important; color: white !important; padding: 14px 12px !important; font-weight: 600 !important; font-size: 13px !important; border: none !important; text-align: left !important; white-space: nowrap !important; }
+    .psn-table-box td { padding: 14px 12px !important; font-size: 13px !important; border-bottom: 1px solid #E2E8F0 !important; background-color: #FFFFFF !important; color: #333333 !important; white-space: nowrap !important; }
+    
+    /* Efek Baris Zebra Standar Pasien Normal */
+    .psn-row-normal:nth-child(even) td { background-color: #FFF5F7 !important; }
+</style>
+
 <div class="container-lg mt-4">
     <h3 class="fw-bold mb-4 text-dark">Input Data Ibu Hamil</h3>
 
@@ -11,7 +22,7 @@
         <div class="row mb-3">
             <div class="col-md-6">
                 <label class="form-label">No. Pasien</label>
-              <input type="text" name="no_pasien" class="form-control" readonly value="{{ $noPasienOtomatis }}" required>
+                <input type="text" name="no_pasien" class="form-control" readonly value="{{ $noPasienOtomatis }}" required>
             </div>
         </div>    
         
@@ -104,19 +115,27 @@
 
         <div class="d-flex justify-content-end gap-2">
             <button type="reset" class="btn btn-warning" onclick="resetFormPasien()">
-                <i class="fas fa-undo"></i> Reset</button>
-            <button type="submit" class="btn btn-success">
-                <i class="fas fa-plus"></i> Tambah</button>
-            <a href="{{ route('bidan.inputPerkembangan') }}" class="btn" style="background-color:#f875aa; color:white;">
-               Selanjutnya <i class="fas fa-angle-double-right"></i>
-            </a>
+                <i class="fas fa-undo"></i> Reset
+            </button>
+            <button type="submit" class="btn btn-success" id="btnSimpan">
+                <i class="fas fa-plus"></i> Tambah
+            </button>
+            
+            <button type="button" id="btnSelanjutnya" class="btn btn-secondary disabled" onclick="keHalamanSelanjutnya()">
+                Selanjutnya <i class="fas fa-angle-double-right"></i>
+            </button>
         </div>
     </form>
 
-    <h5 class="fw-bold mb-3">Daftar Ibu Hamil</h5>
-    <div class="table-responsive shadow mb-5">
-        <table class="table table-bordered table-striped align-middle mb-0">
-           <thead class="th-bumiloo">
+<div class="psn-container w-full" style="padding: 10px 20px; background-color: #FFFFFF; min-h-screen;">
+    
+    <div style="margin-bottom: 10px;">
+        <h1 style="font-size: 28px; font-weight: 700; color: #000000; margin: 0;">Data Pasien Ibu Hamil</h1>
+    </div>
+
+    <div class="psn-table-wrapper">
+        <table class="psn-table-box">
+            <thead>
                 <tr>
                     <th>No Pasien</th>
                     <th>NIK</th>
@@ -135,7 +154,7 @@
             </thead>
             <tbody style="white-space: nowrap;">
                 @foreach($pasien as $p)
-                <tr onclick="isiForm({{ $p->id }})" style="cursor:pointer;">
+                <tr class="psn-row-normal" onclick="isiForm('{{ $p->id }}')" style="cursor:pointer;">
                     <td>{{ $p->no_pasien }}</td>
                     <td>{{ $p->nik }}</td>
                     <td>{{ $p->nama_pasien }}</td>
@@ -157,34 +176,92 @@
 </div>
 
 <script>
+// 1. Ambil data pasien saat baris tabel di-klik (Gunakan routing dinamis Laravel)
 function isiForm(id) {
-    fetch(`/pasien/${id}`)
-        .then(res => res.json())
+    fetch('/bidan/pasien/' + id)
+        .then(response => {
+            if (!response.ok) throw new Error('Gagal memuat data dari server');
+            return response.json();
+        })
         .then(data => {
-            document.querySelector('input[name="id"]').value = data.id || '';
-            document.querySelector('input[name="no_pasien"]').value = data.no_pasien || '';
-            document.querySelector('input[name="nik"]').value = data.nik || '';
-            document.querySelector('input[name="nama_pasien"]').value = data.nama_pasien || '';
-            document.querySelector('input[name="tempat_lahir"]').value = data.tempat_lahir || '';
-            document.querySelector('input[name="tanggal_lahir"]').value = data.tanggal_lahir || '';
-            document.querySelector('input[name="umur"]').value = data.umur || '';
-            document.querySelector('select[name="golongan_darah"]').value = data.golongan_darah || '';
-            document.querySelector('input[name="alamat"]').value = data.alamat || '';
-            document.querySelector('input[name="no_hp"]').value = data.no_hp || '';
-            document.querySelector('select[name="pendidikan"]').value = data.pendidikan || '';
-            document.querySelector('select[name="agama"]').value = data.agama || '';
-            document.querySelector('input[name="pekerjaan"]').value = data.pekerjaan || '';
-            document.querySelector('input[name="nama_suami"]').value = data.nama_suami || '';
+            document.getElementById('id_pasien').value = data.id;
+            document.querySelector('[name="no_pasien"]').value = data.no_pasien;
+            document.querySelector('[name="nik"]').value = data.nik;
+            document.querySelector('[name="nama_pasien"]').value = data.nama_pasien;
+            document.querySelector('[name="tempat_lahir"]').value = data.tempat_lahir;
+            document.querySelector('[name="tanggal_lahir"]').value = data.tanggal_lahir;
+            document.querySelector('[name="umur"]').value = data.umur;
+            document.querySelector('[name="golongan_darah"]').value = data.golongan_darah;
+            document.querySelector('[name="alamat"]').value = data.alamat;
+            document.querySelector('[name="no_hp"]').value = data.no_hp;
+            document.querySelector('[name="pendidikan"]').value = data.pendidikan;
+            document.querySelector('[name="agama"]').value = data.agama;
+            document.querySelector('[name="pekerjaan"]').value = data.pekerjaan;
+            document.querySelector('[name="nama_suami"]').value = data.nama_suami;
+
+            // ON-kan Tombol Selanjutnya secara otomatis
+            const btnSelanjutnya = document.getElementById('btnSelanjutnya');
+            if (btnSelanjutnya) {
+                btnSelanjutnya.classList.remove('btn-secondary', 'disabled');
+                btnSelanjutnya.style.backgroundColor = '#f875aa';
+                btnSelanjutnya.style.color = 'white';
+            }
+
+            // Ubah teks tombol "+ Tambah" menjadi "Perbarui Data"
+            const btnSimpan = document.getElementById('btnSimpan');
+            if (btnSimpan) {
+                btnSimpan.innerHTML = '<i class="fas fa-save"></i> Perbarui Data';
+                btnSimpan.className = 'btn btn-info text-white';
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        })
+        .catch(error => {
+            console.error(error);
+            alert("Gagal memuat data pasien.");
         });
 }
 
-function resetFormPasien() {
-    document.getElementById('formPasien').reset();
-    document.getElementById('id_pasien').value = '';
-    // Kembalikan nomor otomatis bawaan Laravel setelah di-reset
-    document.querySelector('input[name="no_pasien"]').value = "{{ $noPasienOtomatis }}";
+// 2. Navigasi Tombol Selanjutnya
+function keHalamanSelanjutnya() {
+    const idPasien = document.getElementById('id_pasien').value;
+    
+    // PERBAIKAN: Mengarahkan nama route ke 'bidan.inputPerkembanganPasien' (yang bertipe GET)
+    if (idPasien) {
+        window.location.href = "{{ route('bidan.inputPerkembanganPasien') }}?pasien_id=" + idPasien;
+    } else {
+        window.location.href = "{{ route('bidan.inputPerkembanganPasien') }}";
+    }
 }
 
+// 3. Tombol Reset Form
+function resetFormPasien() {
+    const form = document.getElementById('formPasien');
+    if(form) form.reset();
+    
+    document.getElementById('id_pasien').value = '';
+    
+    const noPasienInput = document.querySelector('input[name="no_pasien"]');
+    if(noPasienInput) {
+        noPasienInput.value = "{{ $noPasienOtomatis ?? '' }}";
+    }
+
+    // Kembalikan tombol selanjutnya ke kondisi OFF
+    const btnSelanjutnya = document.getElementById('btnSelanjutnya');
+    if (btnSelanjutnya) {
+        btnSelanjutnya.className = 'btn btn-secondary disabled';
+        btnSelanjutnya.style.backgroundColor = '';
+    }
+
+    // Kembalikan tombol simpan ke kondisi "+ Tambah"
+    const btnSimpan = document.getElementById('btnSimpan');
+    if (btnSimpan) {
+        btnSimpan.innerHTML = '<i class="fas fa-plus"></i> Tambah';
+        btnSimpan.className = 'btn btn-success';
+    }
+}
+
+// 4. Validasi bawaan form html
 function validasiFormBumil(event) {
     const form = document.getElementById('formPasien');
     if (!form.checkValidity()) {
@@ -195,10 +272,41 @@ function validasiFormBumil(event) {
     return true; 
 } 
 
-// === FITUR HITUNG UMUR OTOMATIS ===
+// 5. Fitur Hitung Umur Otomatis & Cek Kelengkapan Mengetik Manual
 document.addEventListener('DOMContentLoaded', function() {
     const inputTanggalLahir = document.getElementById('tanggal_lahir');
     const inputUmur = document.getElementById('umur');
+    const seluruhInputForm = document.querySelectorAll('#formPasien input[required], #formPasien select[required]');
+
+    // Fungsi pemantau ketikan manual (Pasien Baru)
+    function periksaKelengkapanForm() {
+        let semuaSudahIsi = true;
+        seluruhInputForm.forEach(input => {
+            if (input.value.trim() === '') {
+                semuaSudahIsi = false;
+            }
+        });
+
+        const btnSelanjutnya = document.getElementById('btnSelanjutnya');
+        if (btnSelanjutnya) {
+            if (semuaSudahIsi) {
+                btnSelanjutnya.classList.remove('btn-secondary', 'disabled');
+                btnSelanjutnya.style.backgroundColor = '#f875aa';
+                btnSelanjutnya.style.color = 'white';
+            } else {
+                if (!document.getElementById('id_pasien').value) {
+                    btnSelanjutnya.className = 'btn btn-secondary disabled';
+                    btnSelanjutnya.style.backgroundColor = '';
+                }
+            }
+        }
+    }
+
+    // Pasang dengerin event ngetik di form
+    seluruhInputForm.forEach(input => {
+        input.addEventListener('input', periksaKelengkapanForm);
+        input.addEventListener('change', periksaKelengkapanForm);
+    });
 
     function hitungUmurOtomatis() {
         const tanggalLahir = new Date(inputTanggalLahir.value);
@@ -217,6 +325,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         inputUmur.value = umur; 
+        periksaKelengkapanForm();
     }
 
     inputTanggalLahir.addEventListener('change', hitungUmurOtomatis);
@@ -224,14 +333,22 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-@if(session('success'))
-<script>
-    Swal.fire({
-        text: "{{ session('success') }}",
-        showConfirmButton: false, timer: 3000, toast: true, position: 'top', width: '400px',
-        background: '#C6E7CE', color: '#000000', customClass: { popup: 'rounded-xl' }
-    });
-</script>
+@if(session('sukses'))
+    <div class="alert alert-success alert-dismissible fade show text-center"
+         role="alert"
+         style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+                z-index: 9999; display: inline-block; max-width: 80%;">
+        {{ session('sukses') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
 @endif
 
+<script>
+    setTimeout(() => {
+        let alert = document.querySelector('.alert');
+        if(alert){
+            alert.classList.remove('show');
+        }
+    }, 4000);
+</script>
 @endsection
