@@ -20,7 +20,6 @@
         .main-content { margin-left: 250px; padding: 30px; }
         .text-pink { color: #f687b3; }
         .logout-btn { background: none; border: none; color: white; width: 100%; text-align: left; }
-        .th-bumiloo th { background-color: #f875aa !important;color: white !important; }
     </style>
 </head>
 
