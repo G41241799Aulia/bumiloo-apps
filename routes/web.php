@@ -8,6 +8,7 @@ use App\Http\Controllers\BumilController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\InputPasienController;
+use App\Http\Controllers\PerkembanganController;
 
 // 1. Rute Home / Landing Page
 Route::get('/', function () {
@@ -102,14 +103,13 @@ Route::prefix('admin')->group(function () {
         // Mengambil data spesifik pasien saat baris tabel di-klik (untuk Javascript Fetch)
         Route::get('/pasien/{id}', [InputPasienController::class, 'showPasien'])->name('pasien.show');
         
-        // Form Input Perkembangan Medis Pasien
-        Route::get('/input-perkembangan-pasien', function () {
-            return view('bidan.inputPerkembanganPasien');
+       // 1. Jalur GET untuk menampilkan halaman form perkembangan (Tempat tujuan Tombol Selanjutnya)
+       Route::get('/input-perkembangan-pasien', function () {
+        return view('bidan.inputPerkembanganPasien');
         })->name('bidan.inputPerkembanganPasien');
-     
-        Route::post('/input-perkembangan', function () {
-            return redirect()->back()->with('success', 'Data perkembangan berhasil disimpan! (Demo Mode)');
-        })->name('bidan.inputPerkembangan');
+
+       // 2. Jalur POST untuk memproses simpan data dari form perkembangan tersebut ke database
+       Route::post('/input-perkembangan-pasien/store', [PerkembanganController::class, 'storePerkembangan'])->name('bidan.inputPerkembangan');
 
         // Halaman Jadwal Praktik Bidan
         Route::get('/jadwal', function () { return view('bidan.jadwal'); })->name('bidan.jadwal');
