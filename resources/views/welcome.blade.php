@@ -364,7 +364,6 @@
         @endauth
     @endif
 </div>
-
                 </div>
                 <div class="visual-side">
                     <div class="image-frame">
