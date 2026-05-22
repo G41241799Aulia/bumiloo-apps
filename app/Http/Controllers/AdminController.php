@@ -57,11 +57,8 @@ class AdminController extends Controller
 }
 public function masterPasien()
 {
-    // Cukup ambil semua data dari tb_pendaftaran
-    $pasiens = Pendaftaran::all(); 
-    
-    $totalPasien = $pasiens->count();
-
+    $pasiens = \App\Models\Pendaftaran::all(); 
+    $totalPasien = $pasiens->count(); 
     return view('admin.master.dataPasien', compact('pasiens', 'totalPasien'));
 }
 

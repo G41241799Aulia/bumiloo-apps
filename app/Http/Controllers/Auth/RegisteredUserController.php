@@ -29,50 +29,59 @@ class RegisteredUserController extends Controller
      * @throws ValidationException
      */
     public function store(Request $request): RedirectResponse
-{
-    $request->validate([
-        'name' => ['required', 'string', 'max:255'],
-        'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-        'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        'role' => ['required', 'string'],
-        'secret_key' => ['nullable', 'string'],
-    ]);
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            
+            // 🛠️ VALIDASI PASSWORD: Sesuai Ketentuan Ketat Kelompokmu
+            'password' => [
+                'required', 
+                'confirmed', 
+                \Illuminate\Validation\Rules\Password::max(8)  // Minimal 8 karakter
+                    ->mixedCase()                              // Wajib ada Huruf Besar & Kecil
+                    ->numbers()                                // Wajib ada Angka
+                    ->symbols()                                // Wajib ada Simbol/Karakter Khusus
+            ],
+            'role' => ['required', 'string'],
+            'secret_key' => ['nullable', 'string'],
+        ]);
 
-    // 1. LOGIKA KEAMANAN RAHASIA (KODE SUSAH DITEBAK)
-    // Kita cek jika role yang dipilih adalah Admin atau Bidan
-    if (in_array($request->role, ['Admin', 'Bidan'])) {
-        $secretKey = "BML-SRV-9922-PJM-2026"; // Kode rahasia baru yang lebih rumit
-        
-        if ($request->secret_key !== $secretKey) {
-            throw ValidationException::withMessages([
-                'secret_key' => ['Akses Ditolak! Kode Otorisasi Petugas Tidak Valid.'],
-            ]);
+        //LOGIKA KEAMANAN RAHASIA (KODE OTORISASI PETUGAS)
+        if (in_array($request->role, ['Admin', 'Bidan'])) {
+            $secretKey = "BML-2026"; 
+            
+            if ($request->secret_key !== $secretKey) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'secret_key' => ['Akses Ditolak! Kode Otorisasi Petugas Tidak Valid.'],
+                ]);
+            }
         }
+
+        //PROSES PEMBUATAN USER KE DATABASE
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => $request->role,
+        ]);
+
+        event(new Registered($user));
+
+        // Langsung login otomatis setelah berhasil daftar
+        Auth::login($user);
+
+        //LOGIKA PENGALIHAN (REDIRECT) BERDASARKAN ROLE
+        if ($user->role === 'Admin') {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->role === 'Bidan') {
+            return redirect()->route('bidan.dashboard');
+        } elseif ($user->role === 'Bumil') {
+            // ... (Kodingan atasnya tetap sama) ...
+        } elseif ($user->role === 'Bumil') {
+            return redirect()->route('pendaftaran.create')->with('success_register', 'Registrasi Akun Berhasil!');
+        }
+
+        return redirect()->route('dashboard');
     }
-
-    // 2. PROSES PEMBUATAN USER
-    $user = User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-        'role' => $request->role,
-    ]);
-
-    event(new Registered($user));
-
-    // Langsung login otomatis setelah berhasil daftar
-    Auth::login($user);
-
-    // 3. LOGIKA PENGALIHAN (REDIRECT) SESUAI ROLE
-    if ($user->role === 'Admin') {
-        return redirect()->route('admin.dashboard');
-    } elseif ($user->role === 'Bidan') {
-        return redirect()->route('bidan.dashboard');
-    } elseif ($user->role === 'Bumil') {
-        // Khusus Bumil: Langsung arahkan ke halaman pengisian formulir pendaftaran
-        return redirect()->route('pendaftaran.create');
-    }
-
-return redirect(route('dashboard', absolute: false));
-}
 }

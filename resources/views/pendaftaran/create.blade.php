@@ -43,7 +43,24 @@
 <body class="antialiased p-6 md:p-14">
 
     {{-- KARTU PENDAFTARAN --}}
-    <div class="w-full max-w-6xl p-10 md:p-16 card-aisyah relative overflow-hidden">
+    <div class="w-full max-w-6xl p-10 md:p-16 card-aisyah relative overflow-hidden"
+         x-data="{ 
+            tglLahirBumil: '', 
+            umurBumil: '',
+            tglLahirSuami: '',
+            usiaSuami: '',
+            hitungUmur(tgl) {
+                if(!tgl) return '';
+                let lahir = new Date(tgl);
+                let hariIni = new Date();
+                let umur = hariIni.getFullYear() - lahir.getFullYear();
+                let bulan = hariIni.getMonth() - lahir.getMonth();
+                if (bulan < 0 || (bulan === 0 && hariIni.getDate() < lahir.getDate())) {
+                    umur--;
+                }
+                return umur > 0 ? umur : 0;
+            }
+         }">
         
         <div class="absolute top-0 right-0 w-40 h-40 bg-pink-100 rounded-bl-full opacity-60"></div>
 
@@ -56,7 +73,7 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-8">
                 
-                {{-- SISI KIRI --}}
+                {{-- SISI KIRI (DATA IBU HAMIL) --}}
                 <div class="space-y-6">
                     <div>
                         <label class="font-bold text-gray-700 ml-1">NIK</label>
@@ -74,11 +91,11 @@
                     </div>
                     <div>
                         <label class="font-bold text-gray-700 ml-1">Tanggal Lahir</label>
-                        <input type="date" name="tgl_lahir" required class="w-full mt-2 px-6 py-4 rounded-2xl input-custom">
+                        <input type="date" name="tgl_lahir" x-model="tglLahirBumil" @change="umurBumil = hitungUmur(tglLahirBumil)" required class="w-full mt-2 px-6 py-4 rounded-2xl input-custom">
                     </div>
                     <div class="w-2/3">
                         <label class="font-bold text-gray-700 ml-1">Umur</label>
-                        <input type="number" name="umur" required placeholder="Tahun" class="w-full mt-2 px-6 py-4 rounded-2xl input-custom">
+                        <input type="number" name="umur" x-model="umurBumil" required placeholder="Tahun" class="w-full mt-2 px-6 py-4 rounded-2xl input-custom bg-gray-50 font-bold text-pink-600">
                     </div>
                     <div>
                         <label class="font-bold text-gray-700 ml-1">Alamat Domisili</label>
@@ -86,7 +103,7 @@
                     </div>
                 </div>
 
-                {{-- SISI KANAN --}}
+                {{-- SISI KANAN (DATA PENDUKUNG & SUAMI) --}}
                 <div class="space-y-6">
                     <div class="grid grid-cols-2 gap-6">
                         <div>
@@ -147,11 +164,11 @@
                     <div class="grid grid-cols-2 gap-6">
                         <div>
                             <label class="font-bold text-gray-700 ml-1">Tgl Lahir Suami</label>
-                            <input type="date" name="tgllahir_suami" required class="w-full mt-2 px-6 py-4 rounded-2xl input-custom">
+                            <input type="date" name="tgllahir_suami" x-model="tglLahirSuami" @change="usiaSuami = hitungUmur(tglLahirSuami)" required class="w-full mt-2 px-6 py-4 rounded-2xl input-custom">
                         </div>
                         <div>
                             <label class="font-bold text-gray-700 ml-1">Usia Suami</label>
-                            <input type="number" name="usia_suami" required placeholder="Tahun" class="w-full mt-2 px-6 py-4 rounded-2xl input-custom">
+                            <input type="number" name="usia_suami" x-model="usiaSuami" required placeholder="Tahun" class="w-full mt-2 px-6 py-4 rounded-2xl input-custom bg-gray-50 font-bold text-pink-600">
                         </div>
                     </div>
 
@@ -176,4 +193,30 @@
         </form>
     </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if(session('success_register'))
+<script>
+    Swal.fire({
+        title: 'Selamat Datang Ibu Hebat! 🎉',
+        text: 'Akun Bumiloo Anda berhasil dibuat. Silahkan lengkapi formulir pendaftaran medis awal ini yaa.',
+        icon: 'success',
+        confirmButtonColor: '#F875AA', 
+        confirmButtonText: 'Siap, Mengerti!',
+        customClass: { popup: 'rounded-3xl font-poppins' }
+    });
+</script>
+
+@if(session('info'))
+<script>
+    Swal.fire({
+        title: 'Perhatian Bunda! ⚠️',
+        text: "{{ session('info') }}",
+        icon: 'info',
+        confirmButtonColor: '#F875AA',
+        confirmButtonText: 'Isi Formulir Sekarang!',
+        customClass: { popup: 'rounded-3xl font-poppins' }
+    });
+</script>
+@endif
 </html>
