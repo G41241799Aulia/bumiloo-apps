@@ -62,52 +62,70 @@
     .bdn-f-input { width: 100% !important; background-color: #F8FAFC !important; border: 1px solid #E2E8F0 !important; border-radius: 12px !important; padding: 8px 14px !important; font-size: 14px !important; font-weight: 600 !important; color: #334155 !important; transition: 0.2s !important; outline: none !important; }
     .bdn-f-input:focus { border-color: #F875AA !important; background-color: #FFFFFF !important; }
 
-    /* Tombol Custom Figma */
-    .btn-figma-pink {
-        background-color: #F875AA !important;
-        color: #FFFFFF !important;
-        font-size: 13px !important;
-        font-weight: 700 !important;
-        padding: 8px 20px !important;
-        border-radius: 8px !important;
-        border: none !important;
-        cursor: pointer !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        gap: 6px !important;
-    }
-    .btn-figma-batal {
-        background-color: #EDF2F7 !important;
-        color: #4A5568 !important;
-        font-size: 13px !important;
-        font-weight: 700 !important;
-        padding: 8px 20px !important;
-        border-radius: 8px !important;
-        border: 1px solid #CBD5E1 !important;
-        cursor: pointer !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        gap: 6px !important;
-    }
-    .btn-figma-simpan {
-        background-color: #E2E8F0 !important;
-        color: #A0AEC0 !important;
-        font-size: 13px !important;
-        font-weight: 700 !important;
-        padding: 8px 20px !important;
-        border-radius: 8px !important;
-        border: 1px solid #D2D6DC !important;
-        cursor: not-allowed !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        gap: 6px !important;
-    }
-    .btn-figma-simpan-aktif {
-        background-color: #CBD5E0 !important;
-        color: #2D3748 !important;
-        border-color: #CBD5E0 !important;
-        cursor: pointer !important;
-    }
+    /* TOMBOL EDIT PROFIL (PINK KHAS BUMILOO + SEJAJAR ICON) */
+.btn-figma-pink {
+    background-color: #F875AA !important;
+    color: #FFFFFF !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    padding: 10px 22px !important;
+    border-radius: 10px !important;
+    border: none !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    transition: 0.2s !important;
+}
+.btn-figma-pink:hover {
+    background-color: #e05e93 !important;
+}
+
+/* TOMBOL BATAL (SAAT MODUL EDIT AKTIF) */
+.btn-figma-batal {
+    background-color: #94A3B8 !important;
+    color: #FFFFFF !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    padding: 10px 22px !important;
+    border-radius: 10px !important;
+    border: none !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    transition: 0.2s !important;
+}
+
+/* TOMBOL SIMPAN MATI (DISABLED / ABU-ABU) */
+.btn-figma-simpan {
+    background-color: #E2E8F0 !important;
+    color: #A0AEC0 !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    padding: 10px 22px !important;
+    border-radius: 10px !important;
+    border: 1px solid #D2D6DC !important;
+    cursor: not-allowed !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+}
+
+/* 🔥 TOMBOL SIMPAN AKTIF (BERUBAH JADI HIJAU MINT CERAH KHAS BUMILOO) */
+.btn-figma-simpan-aktif {
+    background-color: #F875AA !important; /* Hijau figma sukses */
+    color: #FFFFFF !important;
+    border-color: #F875AA !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 12px rgba(74, 222, 128, 0.2) !important;
+}
+.btn-figma-simpan-aktif:hover {
+    background-color: #F875AA !important;
+}
 </style>
 
 <div class="bdn-f-container w-full" style="padding: 20px; background-color: #F0F4F8; min-height: 100vh;">
@@ -123,17 +141,29 @@
             <div class="bdn-f-card">
                 
                 <div class="bdn-f-header">
-                    <span style="color: #94A3B8; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.2em;">Profil Bidan</span>
-                    
-                    <div style="display: flex; gap: 12px; align-items: center;">
-                        <button type="button" @click="isEditing = !isEditing" :class="isEditing ? 'btn-figma-batal' : 'btn-figma-pink'">
-                            <span x-text="isEditing ? 'Batal' : 'Edit Profil'"></span>
-                        </button>
-                        <button type="submit" :disabled="!isEditing" :class="isEditing ? 'btn-figma-simpan btn-figma-simpan-aktif' : 'btn-figma-simpan'">
-                            Simpan
-                        </button>
-                    </div>
-                </div>
+    <span style="color: #94A3B8; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.2em;">Profil Bidan</span>
+    
+    <div style="display: flex; gap: 12px; align-items: center;">
+        
+        <button type="button" @click="isEditing = !isEditing" :class="isEditing ? 'btn-figma-batal' : 'btn-figma-pink'">
+            <svg x-show="!isEditing" xmlns="http://www.w3.org/2000/svg" style="width: 16px; height: 16px; fill: currentColor;" viewBox="0 0 24 24">
+                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+            </svg>
+            <svg x-show="isEditing" x-cloak xmlns="http://www.w3.org/2000/svg" style="width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.5;" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            <span x-text="isEditing ? 'Batal' : 'Edit Profil'"></span>
+        </button>
+
+        <button type="submit" :disabled="!isEditing" :class="isEditing ? 'btn-figma-simpan btn-figma-simpan-aktif' : 'btn-figma-simpan'">
+            <svg xmlns="http://www.w3.org/2000/svg" style="width: 16px; height: 16px; fill: currentColor;" viewBox="0 0 24 24">
+                <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
+            </svg>
+            <span>Simpan</span>
+        </button>
+        
+    </div>
+</div>
 
                 <div class="bdn-f-scroll-wrapper">
                     <div class="bdn-f-grid">

@@ -57,7 +57,7 @@
                     <td style="padding: 16px; text-align: center;">
                         <div style="display: flex; justify-content: center; items-center: center; gap: 8px;">
                             
-                            <a href="{{ route('jadwal.index', ['pasien_id' => $p->id]) }}" 
+                            <a href="{{ route('jadwal.index', ['pendaftaran_id' => $p->id]) }}" 
                                style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background-color: #4CD964; border-radius: 12px; box-shadow: 0 4px 6px rgba(76, 217, 100, 0.2); text-decoration: none; transition: 0.2s;" 
                                title="Buat Jadwal Pemeriksaan Pasien"
                                onmouseover="this.style.backgroundColor='#3ec456'" onmouseout="this.style.backgroundColor='#4CD964'">

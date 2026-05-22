@@ -57,18 +57,42 @@
             <li class="nav-item"><a class="nav-link" href="{{ route('jadwal.index') }}"><i class="fas fa-calendar-alt"></i> Jadwal</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ route('admin.edukasi') }}"><i class="fas fa-edit"></i> Input Edukasi</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ route('admin.laporan') }}"><i class="fas fa-file-alt"></i> Laporan</a></li>
-            
+
             <hr class="mx-3">
-            <li class="nav-item">
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="nav-link logout-btn">
-                        <i class="fas fa-sign-out-alt"></i> Keluar
-                    </button>
-                </form>
-            </li>
-        </ul>
-    </div>
+<li class="nav-item">
+    <form id="logout-form" method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button type="button" onclick="konfirmasiLogout()" class="nav-link logout-btn" style="background: none; border: none; cursor: pointer; width: 100%; text-align: left;">
+            <i class="fas fa-sign-out-alt"></i> Keluar
+        </button>
+    </form>
+</li>
+</ul>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function konfirmasiLogout() {
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Anda akan keluar dari sesi aplikasi Bumiloo!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#F84F8F', // Warna Pink Fanta khas Bumiloo
+            cancelButtonColor: '#94A3B8',  // Warna Abu-abu minimalis
+            confirmButtonText: 'Ya, Keluar!',
+            cancelButtonText: 'Batal',
+            customClass: {
+                popup: 'rounded-[24px]' // Melengkung estetik mirip figma kalian
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Jika klik "Ya, Keluar!", form di atas akan di-submit otomatis oleh JavaScript
+                document.getElementById('logout-form').submit();
+            }
+        })
+    }
+</script>
 
     @include('partials.header')
 

@@ -40,19 +40,40 @@
             <li class="nav-item"><a class="nav-link {{ Request::is('bidan/laporan*') ? 'active' : '' }}" href="{{ route('bidan.laporan') }}"><i class="fa fa-file-alt"></i> Laporan</a></li>
             
             <hr class="mx-3">
-            <li class="nav-item">
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+<li class="nav-item">
+    <form id="logout-form" method="POST" action="{{ route('logout') }}">
         @csrf
+        <button type="button" onclick="konfirmasiLogout()" class="nav-link logout-btn" style="background: none; border: none; cursor: pointer; width: 100%; text-align: left;">
+            <i class="fas fa-sign-out-alt"></i> Keluar
+        </button>
     </form>
-    
-    <a class="nav-link logout-btn" href="#" 
-       onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-       style="cursor: pointer;">
-        <i class="fas fa-sign-out-alt"></i> Keluar
-    </a>
 </li>
-        </ul>
-    </div>
+</ul>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function konfirmasiLogout() {
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Anda akan keluar dari sesi aplikasi Bumiloo!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#F84F8F', // Warna Pink Fanta khas Bumiloo
+            cancelButtonColor: '#94A3B8',  // Warna Abu-abu minimalis
+            confirmButtonText: 'Ya, Keluar!',
+            cancelButtonText: 'Batal',
+            customClass: {
+                popup: 'rounded-[24px]' // Melengkung estetik mirip figma kalian
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Jika klik "Ya, Keluar!", form di atas akan di-submit otomatis oleh JavaScript
+                document.getElementById('logout-form').submit();
+            }
+        })
+    }
+</script>
 
     @include('partials.header')
 

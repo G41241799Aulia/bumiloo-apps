@@ -77,12 +77,12 @@
                 <div class="space-y-6">
                     <div>
                         <label class="font-bold text-gray-700 ml-1">NIK</label>
-                        <input type="text" name="nik" value="{{ old('nik') }}" required placeholder="16 Digit NIK" class="w-full mt-2 px-6 py-4 rounded-2xl input-custom">
+                        <input type="text" name="nik" value="{{ old('nik') }}" required maxlength="16" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 16);" placeholder="Masukkan 16 Digit NIK" class="w-full mt-2 px-6 py-4 rounded-2xl input-custom">
                         <x-input-error :messages="$errors->get('nik')" class="mt-1" />
                     </div>
                     <div>
                         <label class="font-bold text-gray-700 ml-1">Nama</label>
-                        <input type="text" name="nama" value="{{ old('nama') }}" required placeholder="Nama Lengkap" class="w-full mt-2 px-6 py-4 rounded-2xl input-custom">
+                        <input type="text" name="nama" value="{{ old('nama') }}" required placeholder="Masukkan Nama Lengkap" class="w-full mt-2 px-6 py-4 rounded-2xl input-custom">
                         <x-input-error :messages="$errors->get('nama')" class="mt-1" />
                     </div>
                     <div>
@@ -98,7 +98,7 @@
                         <input type="number" name="umur" x-model="umurBumil" required placeholder="Tahun" class="w-full mt-2 px-6 py-4 rounded-2xl input-custom bg-gray-50 font-bold text-pink-600">
                     </div>
                     <div>
-                        <label class="font-bold text-gray-700 ml-1">Alamat Domisili</label>
+                        <label class="font-bold text-gray-700 ml-1">Alamat</label>
                         <textarea name="alamat" rows="4" required placeholder="Alamat lengkap..." class="w-full mt-2 px-6 py-4 rounded-2xl input-custom"></textarea>
                     </div>
                 </div>
@@ -131,10 +131,12 @@
                                 <option value="SMP">SMP</option>
                                 <option value="SMA">SMA</option>
                                 <option value="S1">S1/Diploma</option>
+                                <option value="S1">S2</option>
+                                <option value="S1">S3</option>
                             </select>
                         </div>
                         <div>
-                            <label class="font-bold text-gray-700 ml-1">Gol. Darah</label>
+                            <label class="font-bold text-gray-700 ml-1">Golongan Darah</label>
                             <select name="gol_darah" required class="w-full mt-2 px-6 py-4 rounded-2xl input-custom bg-white">
                                 <option value="A">A</option>
                                 <option value="B">B</option>
@@ -163,11 +165,11 @@
 
                     <div class="grid grid-cols-2 gap-6">
                         <div>
-                            <label class="font-bold text-gray-700 ml-1">Tgl Lahir Suami</label>
+                            <label class="font-bold text-gray-700 ml-1">Tanggal Lahir Suami</label>
                             <input type="date" name="tgllahir_suami" x-model="tglLahirSuami" @change="usiaSuami = hitungUmur(tglLahirSuami)" required class="w-full mt-2 px-6 py-4 rounded-2xl input-custom">
                         </div>
                         <div>
-                            <label class="font-bold text-gray-700 ml-1">Usia Suami</label>
+                            <label class="font-bold text-gray-700 ml-1">Umur Suami</label>
                             <input type="number" name="usia_suami" x-model="usiaSuami" required placeholder="Tahun" class="w-full mt-2 px-6 py-4 rounded-2xl input-custom bg-gray-50 font-bold text-pink-600">
                         </div>
                     </div>
@@ -210,7 +212,7 @@
 @if(session('info'))
 <script>
     Swal.fire({
-        title: 'Perhatian Bunda! ⚠️',
+        title: 'Perhatian! ⚠️',
         text: "{{ session('info') }}",
         icon: 'info',
         confirmButtonColor: '#F875AA',

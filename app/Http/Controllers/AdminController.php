@@ -88,43 +88,71 @@ public function editHakAkses($id)
 }
 
     /**
-     * FITUR JADWAL KONSULTASI
-     */
+     * /*
+    // Menampilkan Jadwal Bumil
+    */
     public function jadwalIndex(Request $request)
-    {
-        $pasien = null;
-        if ($request->has('pasien_id')) {
-            $pasien = User::find($request->pasien_id);
-        }
+{
+    $pasienTerpilih = null;
 
-        $editJadwal = null;
-        if ($request->has('edit_id')) {
-            $editJadwal = Jadwal::find($request->edit_id);
-        }
-
-        $jadwals = Jadwal::latest()->get();
-
-        return view('admin.jadwal.index', compact('pasien', 'jadwals', 'editJadwal'));
+    if ($request->has('pendaftaran_id')) {
+        $pasienTerpilih = \App\Models\Pendaftaran::find($request->pendaftaran_id);
     }
+
+    $editJadwal = null;
+    if ($request->has('edit_id')) {
+        $editJadwal = Jadwal::find($request->edit_id);
+
+        if ($editJadwal) {
+            $pasienTerpilih = $editJadwal;
+        }
+    }
+
+    $jadwals = Jadwal::latest()->get();
+
+    return view('admin.jadwal.index', compact('jadwals', 'editJadwal', 'pasienTerpilih'));
+}
 
     public function jadwalStore(Request $request)
-    {
-        $request->validate([
-            'nama_pasien' => 'required',
-            'tgl_periksa' => 'required|date',
-        ]);
+{
+    $request->validate([
+        'nama'            => 'required',
+        'nik'             => 'required',
+        'tgl_pemeriksaan' => 'required|date',
+        'jam'             => 'required',
+        'keterangan'      => 'required',
+    ]);
 
-        Jadwal::create($request->all());
+    Jadwal::create([
+        'nama_pasien'     => $request->nama, 
+        'nik'             => $request->nik,
+        'no_hp'           => $request->no_hp,
+        'tgl_lahir'       => $request->tgl_lahir,
+        'tgl_pemeriksaan' => $request->tgl_pemeriksaan,
+        'jam'             => $request->jam,
+        'keterangan'      => $request->keterangan,
+    ]);
 
-        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil disimpan!');
-    }
-
+    return redirect()->route('jadwal.index')->with('success', 'Jadwal konsultasi berhasil disimpan!');
+}
     public function jadwalUpdate(Request $request, $id)
     {
         $jadwal = Jadwal::findOrFail($id);
-        $jadwal->update($request->all());
+        
+        $request->validate([
+            'tgl_pemeriksaan' => 'required|date',
+            'jam'             => 'required',
+            'keterangan'      => 'required',
+        ]);
 
-        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil diupdate!');
+        // Update jadwal yang sedang di-edit
+        $jadwal->update([
+            'tgl_pemeriksaan' => $request->tgl_pemeriksaan,
+            'jam'             => $request->jam,
+            'keterangan'      => $request->keterangan,
+        ]);
+
+        return redirect()->route('jadwal.index')->with('success', 'Jadwal konsultasi berhasil diperbarui!');
     }
 
     public function jadwalDestroy($id)
@@ -132,6 +160,6 @@ public function editHakAkses($id)
         $jadwal = Jadwal::findOrFail($id);
         $jadwal->delete();
         
-        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil dihapus!');
+        return redirect()->route('jadwal.index')->with('success', 'Jadwal konsultasi berhasil dihapus!');
     }
 }

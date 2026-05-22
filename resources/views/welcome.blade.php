@@ -170,7 +170,7 @@
                     <img src="{{ asset('images/logobumiloo.png') }}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2924/2924610.png'" alt="Logo Bumiloo" class="brand-logo">
 
                     <h1 class="headline">
-                        Setiap Langkah Kecil Anda,<br>Adalah <span>Keajaiban Besar.</span>
+                        Setiap Langkah Kecil Anda,<br>adalah <span>Keajaiban Besar.</span>
                     </h1>
                     
                     <p class="paragraph">
@@ -179,20 +179,13 @@
 
                     <div class="nav-links">
                         @if (Route::has('login'))
-                            @auth
-                                {{-- Mempertahankan logika role cerdas kelompokmu --}}
-                                @php
-                                    $targetRoute = 'bumil.dashboard';
-                                    if (Auth::user()->role === 'Admin') $targetRoute = 'admin.dashboard';
-                                    if (Auth::user()->role === 'Bidan') $targetRoute = 'bidan.dashboard';
-                                @endphp
-                                <a href="{{ route($targetRoute) }}" class="btn-bumiloo btn-primary-bml">Masuk ke Dashboard</a>
-                            @else
-                                <a href="{{ route('login') }}" class="btn-bumiloo btn-primary-bml">Log in</a>
-                                @if (Route::has('register'))
-                                    <a href="{{ route('register') }}" class="btn-bumiloo btn-outline-bml">Register</a>
-                                @endif
-                            @endauth
+                        {{-- Jika USER BELUM LOGIN, tampilkan pilihan Masuk atau Daftar --}}
+                        @guest
+                        <a href="{{ route('login') }}" class="btn-bumiloo btn-primary-bml">Log in</a>
+                        @if (Route::has('register'))
+                        <a href="{{ route('register') }}" class="btn-bumiloo btn-outline-bml">Register</a>
+                        @endif
+                        @endguest
                         @endif
                     </div>
                 </div>

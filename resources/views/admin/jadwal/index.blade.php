@@ -5,72 +5,81 @@
 @section('content')
 <style>
     .jwl-container * { font-family: 'Poppins', sans-serif !important; box-sizing: border-box !important; }
-    /* Mengosongkan max-width agar box form melebar penuh mengikuti layar figma kanan */
-    .jwl-form-box { background: #F4F5F7 !important; border-radius: 16px !important; border: 1px solid #D2D6DC !important; padding: 25px 30px !important; width: 100% !important; }
-    .jwl-label { font-size: 14px !important; font-weight: 500 !important; color: #000000 !important; }
-    .jwl-input { background: #FFFFFF !important; border: 1px solid #A0AEC0 !important; border-radius: 8px !important; padding: 10px 15px !important; font-size: 14px !important; outline: none !important; }
-    .jwl-input:focus { border-color: #F875AA !important; box-shadow: 0 0 0 2px rgba(248, 117, 170, 0.2) !important; }
+    .jwl-form-box { background: #FFFFFF !important; border-radius: 24px !important; border: 1px solid #F1F5F9 !important; padding: 30px !important; width: 100% !important; box-shadow: 0 4px 25px rgba(0,0,0,0.01) !important; }
     
-    /* Tombol Simpan Pink Khas Bumiloo */
-    .jwl-btn-submit { background-color: #F875AA !important; color: white !important; font-weight: bold !important; border-radius: 10px !important; padding: 12px 28px !important; border: none !important; cursor: pointer !important; font-size: 14px !important; display: flex !important; align-items: center !important; gap: 10px !important; transition: 0.2s !important; box-shadow: 0 4px 6px rgba(248, 117, 170, 0.2) !important; }
-    .jwl-btn-submit:hover { background-color: #f55a9a !important; }
+    /* Desain Baris Form Sejajar Pas Sesuai Urutan Baru */
+    .jwl-form-row { display: flex; gap: 24px; width: 100%; margin-bottom: 20px; flex-wrap: wrap; }
+    .jwl-form-group { display: flex; align-items: center; gap: 15px; flex: 1; min-width: 280px; }
     
-    /* Tabel Berdiri Lebar Penuh Tanpa Batasan Batas Kaku */
-    .jwl-table-box { width: 100% !important; border-collapse: collapse !important; border-radius: 12px !important; overflow: hidden !important; }
-    .jwl-table-box th { background-color: #F875AA !important; color: white !important; padding: 14px 15px !important; font-weight: 600 !important; font-size: 14px !important; border: none !important; text-align: left !important; }
-    .jwl-table-box td { padding: 14px 15px !important; font-size: 14px !important; border-bottom: 1px solid #E2E8F0 !important; background-color: #FFFFFF !important; color: #333333 !important; }
-    .jwl-table-box tr:nth-child(even) td { background-color: #FFF5F7 !important; } /* Zebra Pink Lembut */
+    .jwl-label { font-size: 14px !important; font-weight: 600 !important; color: #1E293B !important; width: 120px !important; flex-shrink: 0 !important; }
+    .jwl-input { background: #FFFFFF !important; border: 1px solid #CBD5E1 !important; border-radius: 10px !important; padding: 10px 16px !important; font-size: 14px !important; outline: none !important; width: 100%; height: 42px !important; }
+    .jwl-input:focus { border-color: #F84F8F !important; box-shadow: 0 0 0 3px rgba(248, 79, 143, 0.1) !important; }
+    
+    .jwl-input-readonly { background-color: #F8FAFC !important; border-color: #E2E8F0 !important; color: #475569 !important; cursor: not-allowed !important; font-weight: 500 !important; }
+    
+    .jwl-btn-submit { background-color: #F84F8F !important; color: white !important; font-weight: bold !important; border-radius: 10px !important; padding: 12px 28px !important; border: none !important; cursor: pointer !important; font-size: 14px !important; display: inline-flex !important; align-items: center !important; gap: 10px !important; transition: 0.2s !important; }
+    .jwl-btn-submit:hover { background-color: #e03e7a !important; }
+}
 </style>
 
-<div class="jwl-container w-full" style="padding: 10px 20px; background-color: #FFFFFF; min-h-screen;">
+<div class="jwl-container w-full" style="padding: 10px 20px; background-color: #FAFAFA; min-height: 100vh;">
     
-    <h1 style="font-size: 28px; font-weight: 700; color: #000000; margin: 0 0 15px 0;">Jadwal Konsultasi</h1>
-
-    <div style="margin-bottom: 25px;">
-        @if(isset($pasien) && $pasien)
-            <p style="font-size: 15px; font-weight: 600; color: #000000; margin: 0; letter-spacing: -0.3px;">
-                Pasien: {{ $pasien->name }} — NIK: {{ $pasien->nik }} — No. HP: {{ $pasien->no_hp }} — Tgl Lahir: {{ date('d-m-Y', strtotime($pasien->tgl_lahir)) }}
-            </p>
-        @else
-            <p style="font-size: 14px; font-weight: 500; color: #718096; margin: 0; border-left: 4px solid #F875AA; padding-left: 12px; font-style: italic;">
-                Belum ada data pasien yang dipilih. Silakan hubungi aksi melalui halaman <span style="color: #F875AA; font-weight: 600;">Data Pasien</span> untuk memicu pembuatan jadwal.
-            </p>
-        @endif
-    </div>
+    <h1 style="font-size: 26px; font-weight: 700; color: #0F172A; margin: 0 0 20px 0;">Jadwal Konsultasi Pasien</h1>
 
     <div class="jwl-form-box" style="margin-bottom: 35px;">
-        <p style="font-size: 15px; font-weight: 700; color: #000000; margin: 0 0 25px 0;">
-            {{ isset($editJadwal) ? 'Edit Jadwal Konsultasi' : 'Tambah Jadwal Konsultasi' }}
+        <p style="font-size: 15px; font-weight: 700; color: #0F172A; margin: 0 0 25px 0;">
+            {{ isset($editJadwal) ? 'Edit Atur Jadwal' : 'Form Pembuatan Jadwal Baru' }}
         </p>
 
         <form action="{{ isset($editJadwal) ? route('jadwal.update', $editJadwal->id) : route('jadwal.store') }}" method="POST" style="margin: 0; display: flex; flex-direction: column; width: 100%;">
             @csrf
             @if(isset($editJadwal)) @method('PUT') @endif
 
-            <input type="hidden" name="nama_pasien" value="{{ $editJadwal->nama_pasien ?? ($pasien->name ?? '') }}">
-            <input type="hidden" name="nik" value="{{ $editJadwal->nik ?? ($pasien->nik ?? '') }}">
-            <input type="hidden" name="no_hp" value="{{ $editJadwal->no_hp ?? ($pasien->no_hp ?? '') }}">
-            <input type="hidden" name="tgl_lahir" value="{{ $editJadwal->tgl_lahir ?? ($pasien->tgl_lahir ?? '') }}">
-
-            <div style="display: flex; gap: 40px; width: 100%; margin-bottom: 20px;">
-                <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
-                    <label class="jwl-label" style="width: 160px; shrink: 0;">Tanggal Pemeriksaan</label>
-                    <input type="date" name="tgl_pemeriksaan" value="{{ $editJadwal->tgl_pemeriksaan ?? '' }}" required class="jwl-input" style="flex-grow: 1; max-width: 260px; height: 42px;">
+            <div class="jwl-form-row">
+                <div class="jwl-form-group">
+                    <label class="jwl-label">Nama Pasien</label>
+                    <input type="text" name="nama" value="{{ $pasienTerpilih->nama_pasien ?? ($pasienTerpilih->nama ?? ($editJadwal->nama_pasien ?? '')) }}" readonly class="jwl-input jwl-input-readonly">
                 </div>
-                <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
-                    <label class="jwl-label" style="width: 50px; shrink: 0;">Jam</label>
-                    <input type="time" name="jam" value="{{ $editJadwal->jam ?? '' }}" required class="jwl-input" style="flex-grow: 1; max-width: 180px; height: 42px;">
+                <div class="jwl-form-group">
+                    <label class="jwl-label">NIK</label>
+                    <input type="text" name="nik" value="{{ $pasienTerpilih->nik ?? ($editJadwal->nik ?? '') }}" readonly class="jwl-input jwl-input-readonly">
                 </div>
             </div>
 
-            <div style="display: flex; align-items: flex-start; gap: 15px; width: 100%; margin-bottom: 25px;">
-                <label class="jwl-label" style="width: 160px; shrink: 0; padding-top: 8px;">Keterangan</label>
-                <textarea name="keterangan" placeholder="Masukkan detail konsultasi..." required class="jwl-input" style="width: 100%; flex-grow: 1; height: 110px; resize: none; font-family: inherit;"></textarea>
+            <div class="jwl-form-row">
+                <div class="jwl-form-group">
+                    <label class="jwl-label">Tanggal Lahir</label>
+                    <input type="text" name="tgl_lahir" value="{{ (isset($pasienTerpilih) && $pasienTerpilih->tgl_lahir) ? date('d/m/Y', strtotime($pasienTerpilih->tgl_lahir)) : ((isset($editJadwal) && $editJadwal->tgl_lahir) ? date('d/m/Y', strtotime($editJadwal->tgl_lahir)) : '') }}" readonly class="jwl-input jwl-input-readonly">
+                </div>
+                <div class="jwl-form-group">
+                    <label class="jwl-label">No. HP</label>
+                    <input type="text" name="no_hp" value="{{ $pasienTerpilih->no_hp ?? ($editJadwal->no_hp ?? '') }}" readonly class="jwl-input jwl-input-readonly">
+                </div>
             </div>
 
-            <div style="display: flex; justify-content: flex-end; width: 100%;">
+            <hr style="border: 0; border-top: 1px solid #F1F5F9; margin: 10px 0 25px 0;">
+
+            <div class="jwl-form-row">
+                <div class="jwl-form-group">
+                    <label class="jwl-label">Tgl Periksa</label>
+                    <input type="date" name="tgl_pemeriksaan" value="{{ $editJadwal->tgl_pemeriksaan ?? '' }}" required class="jwl-input">
+                </div>
+                <div class="jwl-form-group">
+                    <label class="jwl-label">Jam</label>
+                    <input type="time" name="jam" value="{{ $editJadwal->jam ?? '' }}" required class="jwl-input">
+                </div>
+            </div>
+
+            <div class="jwl-form-row" style="margin-bottom: 25px;">
+                <div class="jwl-form-group" style="align-items: flex-start;">
+                    <label class="jwl-label" style="padding-top: 10px;">Keterangan</label>
+                    <textarea name="keterangan" placeholder="Masukkan keterangan konsultasi..." required class="jwl-input" style="height: 80px; resize: none; font-family: inherit; flex-grow: 1;">{{ $editJadwal->keterangan ?? '' }}</textarea>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; width: 100%; gap: 12px;">
                 @if(isset($editJadwal))
-                    <a href="{{ route('jadwal.index') }}" style="text-decoration: none; background: #A0AEC0; color: white; padding: 10px 24px; border-radius: 10px; font-weight: bold; font-size: 14px; margin-right: 12px; display: flex; align-items: center;">Batal</a>
+                    <a href="{{ route('jadwal.index') }}" style="text-decoration: none; background: #94A3B8; color: white; padding: 12px 24px; border-radius: 10px; font-weight: bold; font-size: 14px; display: flex; align-items: center;">Batal</a>
                 @endif
                 <button type="submit" class="jwl-btn-submit">
                     <svg xmlns="http://www.w3.org/2000/svg" style="width: 18px; height: 18px; fill: #FFFFFF;" viewBox="0 0 24 24">
@@ -82,45 +91,52 @@
         </form>
     </div>
 
-    <div style="margin-top: 30px; width: 100%;">
-        <h2 style="font-size: 20px; font-weight: 700; color: #000000; margin: 0 0 15px 0;">Daftar Jadwal Konsultasi</h2>
+    <div style="background: #FFFFFF; border-radius: 24px; padding: 25px; box-shadow: 0 4px 25px rgba(0, 0, 0, 0.02); border: 1px solid #F1F5F9;">
+        <h2 style="font-size: 18px; font-weight: 700; color: #0F172A; margin: 0 0 20px 0;">Daftar Antrean Konsultasi Terjadwal</h2>
         
-        <div style="overflow-x: auto; width: 100%;">
-            <table class="jwl-table-box">
+        <div style="width: 100%; overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; min-width: 1000px; font-size: 14px; color: #334155;">
                 <thead>
-                    <tr>
-                        <th style="border-top-left-radius: 12px;">Nama Pasien</th>
-                        <th>NIK</th>
-                        <th>No. HP</th>
-                        <th>Tgl Lahir</th>
-                        <th>Tgl Pemeriksaan</th>
-                        <th>Jam</th>
-                        <th style="border-top-right-radius: 12px; text-align: center;">Aksi</th>
+                    <tr style="background-color: #F84F8F; color: #FFFFFF;">
+                        <th style="padding: 16px 20px; font-weight: 600; border-top-left-radius: 14px; border-bottom-left-radius: 14px;">Nama Pasien</th>
+                        <th style="padding: 16px 20px; font-weight: 600;">NIK</th>
+                        <th style="padding: 16px 20px; font-weight: 600;">Tgl Lahir</th>
+                        <th style="padding: 16px 20px; font-weight: 600;">No. HP</th>
+                        <th style="padding: 16px 20px; font-weight: 600;">Tgl Pemeriksaan</th>
+                        <th style="padding: 16px 20px; font-weight: 600;">Jam</th>
+                        <th style="padding: 16px 20px; font-weight: 600; text-align: center; border-top-right-radius: 14px; border-bottom-right-radius: 14px; width: 160px;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($jadwals as $j)
-                    <tr>
-                        <td style="font-weight: 500;">{{ $j->nama_pasien }}</td>
-                        <td>{{ $j->nik }}</td>
-                        <td>{{ $j->no_hp }}</td>
-                        <td>{{ date('d-m-Y', strtotime($j->tgl_lahir)) }}</td>
-                        <td style="font-weight: 600;">{{ date('d/m/Y', strtotime($j->tgl_pemeriksaan)) }}</td>
-                        <td style="font-weight: 600;">{{ $j->jam }}</td>
-                        <td style="text-align: center;">
-                            <div style="display: flex; justify-content: center; gap: 8px;">
-                                <a href="{{ route('jadwal.index', ['edit_id' => $j->id]) }}" style="text-decoration: none; color: #D69E2E; font-weight: bold; font-size: 13px; background: #EDF2F7; padding: 5px 12px; border-radius: 6px;">Edit</a>
-                                <button type="button" onclick="confirmDelete('{{ $j->id }}', '{{ $j->nama_pasien }}')" style="color: #E53E3E; font-weight: bold; font-size: 13px; background: #EDF2F7; padding: 5px 12px; border-radius: 6px; border: none; cursor: pointer;">Hapus</button>
-                                
-                                <form id="delete-form-{{ $j->id }}" action="{{ route('jadwal.destroy', $j->id) }}" method="POST" style="display: none;">
-                                    @csrf @method('DELETE')
-                                </form>
-                            </div>
-                        </td>
+                    <tr style="border-bottom: 1px solid #F1F5F9; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#FFF1F6'" onmouseout="this.style.backgroundColor='transparent'">
+                        <td style="padding: 18px 20px; font-weight: 500; color: #0F172A;">{{ $j->nama ?? $j->nama_pasien }}</td>
+                        <td style="padding: 18px 20px;">{{ $j->nik }}</td>
+                        <td style="padding: 18px 20px;">{{ $j->tgl_lahir }}</td>
+                        <td style="padding: 18px 20px;">{{ $j->no_hp }}</td>
+                        <td style="padding: 18px 20px; font-weight: 500; color: #F84F8F;">{{ date('d-m-Y', strtotime($j->tgl_pemeriksaan)) }}</td>
+                        <td style="padding: 18px 20px; font-weight: 600;">{{ $j->jam }} WIB</td>
+                        <td style="padding: 14px 20px; text-align: center;">
+                        <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+                        <a href="{{ route('jadwal.index', ['edit_id' => $j->id]) }}" 
+                        style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background-color: #FFCC00; border-radius: 12px; box-shadow: 0 4px 6px rgba(255, 204, 0, 0.2); text-decoration: none; transition: 0.2s;" 
+                        title="Edit Jadwal Konsultasi"
+                        onmouseover="this.style.backgroundColor='#e6b800'" onmouseout="this.style.backgroundColor='#FFCC00'">
+                        <span style="color: #FFFFFF; font-size: 16px;">✎</span>
+                    </a>
+                    
+                    <button type="button" onclick="confirmDelete('{{ $j->id }}')" 
+                style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background-color: #E2E8F0; border-radius: 12px; box-shadow: 0 4px 6px rgba(226, 232, 240, 0.4); border: none; cursor: pointer; transition: 0.2s;" 
+                title="Hapus Jadwal Konsultasi"
+                onmouseover="this.style.backgroundColor='#CBD5E1'" onmouseout="this.style.backgroundColor='#E2E8F0'">
+            <span style="color: #EF4444; font-size: 20px; font-weight: bold; line-height: 1;">🗑</span>
+        </button>
+            </div>
+        </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" style="text-align: center; color: #A0AEC0; padding: 40px; font-style: italic; font-weight: 500;">
+                        <td colspan="7" style="text-align: center; color: #94A3B8; padding: 40px; font-style: italic;">
                             Belum ada jadwal konsultasi yang terdaftar di dalam database.
                         </td>
                     </tr>
@@ -131,32 +147,46 @@
     </div>
 </div>
 
-{{-- SweetAlert2 System JS --}}
+{{-- SweetAlert2 JS --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function confirmDelete(id, nama) {
         Swal.fire({
-            title: 'Hapus Antrean?',
-            text: "Yakin ingin menghapus jadwal dari " + nama + "?",
+            title: 'Hapus Jadwal?',
+            text: "Jadwal pemeriksaan milik " + nama + " akan terhapus permanen!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#ff0000',
-            cancelButtonColor: '#d1d5db',
-            confirmButtonText: 'Hapus',
+            confirmButtonColor: '#EF4444',
+            cancelButtonColor: '#94A3B8',
+            confirmButtonText: 'Ya, Hapus',
             cancelButtonText: 'Batal',
             customClass: { popup: 'rounded-[24px]' }
         }).then((result) => {
-            if (result.isConfirmed) { document.getElementById('delete-form-' + id).submit(); }
+            if (result.isConfirmed) { 
+                let form = document.createElement('form');
+                form.action = "/admin/jadwal/" + id;
+                form.method = 'POST';
+                form.innerHTML = `@csrf @method('DELETE')`;
+                document.body.appendChild(form);
+                form.submit();
+            }
         })
     }
 </script>
-
 @if(session('success'))
 <script>
     Swal.fire({
         text: "{{ session('success') }}",
-        showConfirmButton: false, timer: 3000, toast: true, position: 'top', width: '400px',
-        background: '#C6E7CE', color: '#000000', customClass: { popup: 'rounded-xl' }
+        showConfirmButton: false, 
+        timer: 3500, 
+        toast: true, 
+        position: 'top', 
+        width: 'auto',
+        background: '#C6E7CE', 
+        color: '#1E293B',      
+        customClass: { 
+            popup: 'rounded-xl shadow-lg px-6 py-4 font-poppins font-medium' 
+        }
     });
 </script>
 @endif
