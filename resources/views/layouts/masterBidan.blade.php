@@ -12,17 +12,17 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        body { font-family: 'Poppins', sans-serif; background-color: #fdf2f5; margin: 0; }
-        .sidebar { background-color: #f687b3; min-height: 100vh; color: white; padding: 20px 0; position: fixed; width: 250px; z-index: 100; }
-        .sidebar .nav-link { color: white; padding: 12px 25px; margin: 5px 15px; border-radius: 10px; display: flex; align-items: center; transition: 0.3s; }
-        .sidebar .nav-link:hover, .sidebar .nav-link.active { background-color: rgba(255, 255, 255, 0.3); font-weight: bold; }
-        .sidebar .nav-link i { margin-right: 15px; width: 20px; }
-        .main-content { margin-left: 250px; padding: 30px; }
-        .text-pink { color: #f687b3; }
-        .logout-btn { background: none; border: none; color: white; width: 100%; text-align: left; }
-    
-Hapus semua CSS dark mode yang ada sekarang, lalu ganti dengan ini semua — sudah digabung dan selectornya sudah benar pakai .main-content
-Ganti seluruh CSS dark mode di masterbidan.blade.php
+body { font-family: 'Poppins', sans-serif; background-color: #fdf2f5; margin: 0; }
+.sidebar { background-color: #f687b3; min-height: 100vh; color: white; padding: 20px 0; position: fixed; width: 250px; z-index: 100; }
+.sidebar .nav-link { color: white; padding: 12px 25px; margin: 5px 15px; border-radius: 10px; display: flex; align-items: center; transition: 0.3s; }
+.sidebar .nav-link:hover, .sidebar .nav-link.active { background-color: rgba(255, 255, 255, 0.3); font-weight: bold; }
+.sidebar .nav-link i { margin-right: 15px; width: 20px; }
+
+/* Di sini letak perubahannya, padding-top digabung langsung ke .main-content */
+.main-content { margin-left: 250px; padding: 30px; padding-top: 100px !important; }
+
+.text-pink { color: #f687b3; }
+.logout-btn { background: none; border: none; color: white; width: 100%; text-align: left; }
 /* =========================================
    DARK MODE - Bidan
    Semua selector pakai .main-content

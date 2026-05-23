@@ -11,16 +11,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Poppins', sans-serif; background-color: #fdf2f5; margin: 0; }
-        .sidebar { background-color: #f875aa; min-height: 100vh; color: white; padding: 20px 0; position: fixed; width: 250px; z-index: 100; }
-        .sidebar .nav-link { color: white; padding: 12px 25px; margin: 5px 15px; border-radius: 10px; display: flex; align-items: center; transition: 0.3s; }
-        .sidebar .nav-link:hover, .sidebar .nav-link.active { background-color: rgba(255, 255, 255, 0.3); font-weight: bold; }
-        .sidebar .nav-link i { margin-right: 15px; width: 20px; }
-        .main-content { margin-left: 250px; padding: 30px; }
-        .text-pink { color: #f875aa; }
-        .logo-shadow { box-shadow: 0 4px 6px rgba(248,117,170,0.6); }
-        .logout-btn { background: none; border: none; color: white; width: 100%; text-align: left; }
+       body { font-family: 'Poppins', sans-serif; background-color: #fdf2f5; margin: 0; }
+.sidebar { background-color: #f875aa; min-height: 100vh; color: white; padding: 20px 0; position: fixed; width: 250px; z-index: 100; }
+.sidebar .nav-link { color: white; padding: 12px 25px; margin: 5px 15px; border-radius: 10px; display: flex; align-items: center; transition: 0.3s; }
+.sidebar .nav-link:hover, .sidebar .nav-link.active { background-color: rgba(255, 255, 255, 0.3); font-weight: bold; }
+.sidebar .nav-link i { margin-right: 15px; width: 20px; }
 
+/* Baris yang sudah diperbaiki jarak atasnya */
+.main-content { margin-left: 250px; padding: 30px; padding-top: 100px !important; }
+
+.text-pink { color: #f875aa; }
+.logo-shadow { box-shadow: 0 4px 6px rgba(248,117,170,0.6); }
+.logout-btn { background: none; border: none; color: white; width: 100%; text-align: left; }
 /* === BACKGROUND UTAMA === */
 body.dark-mode {
   background-color: #1a1a2e !important;

@@ -71,24 +71,38 @@
             text-align: center;
         }
 
-        /* MAIN CONTENT */
-        #main-content {
-            margin-left: var(--sidebar-w);
-            min-height: 100vh;
-            width: calc(100% - var(--sidebar-w));
-        }
+       /* MAIN CONTENT (SUDAH DIPERBAIKI) */
+#main-content {
+    margin-left: var(--sidebar-w);
+    min-height: 100vh;
+    width: calc(100% - var(--sidebar-w));
+    padding-top: 50px !important; /* Jarak aman agar konten turun di bawah navbar fixed */
+}
 
-        .page-inner {
-            padding: 30px;
-        }
+.page-inner {
+    padding: 30px;
+}
 
-        .text-pink { color: var(--primary-light) !important; }
+.text-pink { 
+    color: var(--primary-light) !important; 
+}
 
-        @media (max-width: 991px) {
-            .sidebar { width: 80px; }
-            .sidebar .nav-link span, .sidebar .text-center span, .sidebar hr { display: none; }
-            #main-content { margin-left: 80px; width: calc(100% - 80px); }
-        }
+/* RESPONSIVE LAYOUT */
+@media (max-width: 991px) {
+    .sidebar { 
+        width: 80px; 
+    }
+    .sidebar .nav-link span, 
+    .sidebar .text-center span, 
+    .sidebar hr { 
+        display: none; 
+    }
+    #main-content { 
+        margin-left: 80px; 
+        width: calc(100% - 80px); 
+        padding-top: 100px !important; /* Jarak aman versi HP/Tablet agar tetap sinkron */
+    }
+}
             
 /* =========================================
    DARK MODE - Pasien / Bumil

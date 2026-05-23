@@ -50,15 +50,42 @@ class PengaturanController extends Controller
         return redirect()->back()->with('success', 'Data diri pendaftaran berhasil diperbarui!');
     }
 
-    public function destroy()
-    {
-        $user = Auth::user();
-        Auth::logout();
-        
-        // Hapus data pendaftaran dan user secara bersih
-        Pendaftaran::where('user_id', $user->id)->delete();
-        $user->delete(); 
+   public function destroy(Request $request)
+{
+    $user = Auth::user();
+    Pendaftaran::where('user_id', $user->id)->delete();
+    Auth::logout();
+    $user->delete(); 
+    return redirect('/')->with('success', 'Akun berhasil dihapus.');
+}
+   public function keamanan() {
+    $role = auth()->user()->role;
+    return view('partials.subsettings.keamanan', compact('role'));
+}
 
-        return redirect('/')->with('success', 'Akun berhasil dihapus.');
+public function gantiNomor() {
+    $role = auth()->user()->role;
+    return view('partials.subsettings.gantinomor', compact('role'));
+}
+
+public function bantuan() {
+    $role = auth()->user()->role;
+    return view('partials.subsettings.bantuan', compact('role'));
+}
+public function updateAvatar(Request $request)
+{
+    $request->validate([
+        'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    $user = Auth::user();
+if ($user->avatar) {
+        Storage::disk('public')->delete($user->avatar);
     }
+    $path = $request->file('avatar')->store('avatars', 'public');
+    $user->avatar = $path;
+    $user->save();
+
+    return redirect()->back()->with('success', 'Foto profil berhasil diperbarui!');
+}
 }

@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg shadow-sm px-4" 
-     style="margin-left: 250px; background-color: #f875aa; height: 70px; position: sticky; top: 0; z-index: 1000;">
+     style="margin-left: 250px; background-color: #f875aa; height: 70px; position: fixed; top: 0; right: 0; left: 0; z-index: 1030;">
     <div class="container-fluid">
         <a class="navbar-brand fw-bold text-white d-lg-none" href="#">Bumiloo</a>
 

@@ -147,13 +147,31 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
-    // ─── TAMBAHKAN KODE BARU KAMU DI SINI ──────────────────────────────
+    // ─── Pengaturan ──────────────────────────────
     Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan.index');
     Route::post('/pengaturan/update', [PengaturanController::class, 'update'])->name('pengaturan.update');
+    Route::post('/pengaturan/updateavatar', [PengaturanController::class, 'updateAvatar'])->name('profile.updateAvatar');
     //
+    Route::get('/pengaturan/keamanan', function () {
+    $role = auth()->user()->role;
+    // Ubah 'pengaturan.keamanan' menjadi 'partials.subsettings.keamanan'
+    return view('partials.subsettings.keamanan', compact('role'));
+})->name('pengaturan.keamanan');
+
+Route::get('/pengaturan/gantinomor', function () {
+    $role = auth()->user()->role;
+    return view('partials.subsettings.gantinomor', compact('role'));
+})->name('pengaturan.gantinomor');
+
+Route::get('/pengaturan/bantuan', function () {
+    $role = auth()->user()->role;
+    return view('partials.subsettings.bantuan', compact('role'));
+})->name('pengaturan.bantuan');
 });
 
 // Logout Route (Menggunakan Controller yang sudah kita perbaiki)
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+// Pastikan rute ini mengarah ke PengaturanController
+Route::delete('/pengaturan/hapus-akun', [App\Http\Controllers\PengaturanController::class, 'destroy'])->name('profile.destroy');
 
 require __DIR__.'/auth.php';
