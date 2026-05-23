@@ -12,20 +12,14 @@
                 <i class="fas fa-bell fs-5 text-white cursor-pointer"></i>
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 10px;">3</span>
             </div>
-            <div class="dropdown border-start ps-3 ms-2">
-    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" 
-       id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
-        <span class="me-2 d-none d-sm-inline">{{ Auth::user()->name }}</span>
-        <i class="fas fa-user-circle fs-4"></i>
-    </a>
-    <ul class="dropdown-menu dropdown-menu-end p-0 border-0 shadow mt-2" 
-        aria-labelledby="profileDropdown" 
-        style="width: 320px; border-radius: 15px; overflow: hidden; z-index: 9999;">
-        <li>
-            @include('partials.settingsdropdown')
-        </li>
-    </ul>
+           <div class="border-start ps-3 ms-2 d-flex align-items-center text-white" 
+     onclick="toggleProfileSidebar()" 
+     style="cursor: pointer; user-select: none;">
+    <span class="me-2 d-none d-sm-inline">{{ Auth::user()->name }}</span>
+    <i class="fas fa-user-circle fs-4"></i>
 </div>
+
+@include('partials.settingsdropdown')
         </div>
     </div>
 </nav>
